@@ -46,6 +46,7 @@ spec:
 ```
 
 **Without this operator:** Manual `kubectl patch` required or job/cronjob required
+
 **With this operator:** Automatic approval for v0.68.0 only, upgrades require Git updates
 
 > **Important:** The operator only approves InstallPlans where the CSV version **exactly matches** the Subscription's `startingCSV`. This prevents accidental auto-approval of upgrades.
