@@ -68,10 +68,45 @@ The InstallPlan Approver Operator watches for InstallPlans in your Kubernetes cl
 
 ## Prerequisites
 
-- OpenShift cluster v4.16+
+- Kubernetes v1.30+ or OpenShift cluster v4.16+
+- OLM (Operator Lifecycle Manager) installed in the cluster
+
+**For Development:**
 - Go 1.24.3+
 - Operator SDK v1.41.1+
-- OLM (Operator Lifecycle Manager) installed in the cluster
+
+## Installation
+
+### Pre-built Container Images
+
+Multi-architecture images (amd64, arm64) are available on GitHub Container Registry:
+
+```bash
+ghcr.io/rajinator/installplan-approver-operator:latest
+ghcr.io/rajinator/installplan-approver-operator:v0.1.0  # Specific version
+```
+
+**No authentication required** - all images are public.
+
+### Quick Install
+
+**Using kustomize:**
+```bash
+kubectl apply -k github.com/rajinator/installplan-approver-operator/config/default?ref=v1.0.0
+```
+
+**Using operator image directly:**
+```bash
+make deploy IMG=ghcr.io/rajinator/installplan-approver-operator:v1.0.0
+```
+
+**Verify installation:**
+```bash
+kubectl get deployment -n iplan-approver-system
+kubectl logs -n iplan-approver-system -l control-plane=controller-manager -f
+```
+
+For detailed installation options, see [DEPLOY.md](DEPLOY.md).
 
 ## Quick Start
 

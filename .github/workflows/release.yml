@@ -1,0 +1,116 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Get version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version_number=${VERSION#v}" >> $GITHUB_OUTPUT
+      
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          # Try to extract changelog section for this version
+          if [ -f CHANGELOG.md ]; then
+            # Extract content between this version and the next version header
+            CHANGELOG_CONTENT=$(sed -n "/## \[${VERSION}\]/,/## \[/p" CHANGELOG.md | sed '$d' | tail -n +2)
+            
+            # If we didn't find a specific version section, create a generic one
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              CHANGELOG_CONTENT="See [CHANGELOG.md](CHANGELOG.md) for details."
+            fi
+          else
+            CHANGELOG_CONTENT="No changelog available."
+          fi
+          
+          # Save to file for multiline output
+          {
+            echo "content<<EOF"
+            echo "$CHANGELOG_CONTENT"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+      
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## InstallPlan Approver Operator ${{ steps.version.outputs.version }}
+          
+          ### Container Images
+          
+          **Multi-architecture support (amd64, arm64):**
+          
+          ```bash
+          ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+          ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version_number }}
+          ghcr.io/${{ github.repository }}:latest
+          ```
+          
+          ### Quick Installation
+          
+          **Using kustomize:**
+          ```bash
+          kubectl apply -k github.com/${{ github.repository }}/config/default?ref=${{ steps.version.outputs.version }}
+          ```
+          
+          **Using the operator image:**
+          ```bash
+          make deploy IMG=ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+          ```
+          
+          ### What's Changed
+          
+          ${{ steps.changelog.outputs.content }}
+          
+          ### Verification
+          
+          **Verify the operator is running:**
+          ```bash
+          kubectl get deployment -n iplan-approver-system
+          kubectl logs -n iplan-approver-system -l control-plane=controller-manager
+          ```
+          
+          **Create a sample InstallPlanApprover:**
+          ```bash
+          kubectl apply -f https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.version.outputs.version }}/config/samples/operators_v1alpha1_installplanapprover.yaml
+          ```
+          
+          ---
+          
+          **Full Changelog**: https://github.com/${{ github.repository }}/blob/${{ steps.version.outputs.version }}/CHANGELOG.md
+          EOF
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-alpha') || contains(steps.version.outputs.version, '-beta') || contains(steps.version.outputs.version, '-rc') }}
+          generate_release_notes: true
+          files: |
+            LICENSE
+            README.md
+            CHANGELOG.md
+
