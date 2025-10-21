@@ -1,0 +1,75 @@
+# Git files
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# IDE and editor files
+.idea
+.vscode
+.vs
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Go build artifacts
+bin/
+testbin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Coverage and test outputs
+*.out
+cover.out
+coverage.out
+*.prof
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# CI/CD files (not needed in container)
+.github/
+.gitlab-ci.yml
+.circleci/
+Jenkinsfile
+
+# Configuration files (not needed in build)
+.golangci.yml
+.editorconfig
+
+# Kubernetes manifests (not needed in container)
+config/
+hack/
+
+# Test files and directories
+test/
+*_test.go
+
+# Scripts (not needed in container)
+*.sh
+
+# Project management
+PROJECT
+PROJECT-SUMMARY.md
+IMPLEMENTATION.md
+QUICKSTART.md
+GITHUB-CHECKLIST.md
+
+# License and other non-code files
+LICENSE
+NOTICE
+
+# Build output
+Dockerfile.cross

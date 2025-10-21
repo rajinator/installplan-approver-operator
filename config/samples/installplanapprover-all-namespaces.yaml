@@ -1,0 +1,17 @@
+apiVersion: operators.bapu.cloud/v1alpha1
+kind: InstallPlanApprover
+metadata:
+  labels:
+    app.kubernetes.io/name: installplan-approver-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: installplanapprover-all-namespaces
+spec:
+  # Enable automatic approval of InstallPlans
+  autoApprove: true
+  
+  # Watch all namespaces (empty targetNamespaces)
+  targetNamespaces: []
+  
+  # Approve all operators (empty operatorNames)
+  operatorNames: []
+

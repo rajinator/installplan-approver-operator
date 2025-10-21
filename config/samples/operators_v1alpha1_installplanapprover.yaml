@@ -1,0 +1,20 @@
+apiVersion: operators.bapu.cloud/v1alpha1
+kind: InstallPlanApprover
+metadata:
+  labels:
+    app.kubernetes.io/name: installplan-approver-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: installplanapprover-sample
+spec:
+  # Enable automatic approval of InstallPlans
+  autoApprove: true
+  
+  # Target specific namespaces (empty means all namespaces)
+  targetNamespaces:
+    - openshift-operators
+    - operators
+  
+  # Optionally specify operator names to approve (empty means all operators)
+  # operatorNames:
+  #   - cert-manager
+  #   - prometheus
