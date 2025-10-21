@@ -27,6 +27,46 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "version_number=${VERSION#v}" >> $GITHUB_OUTPUT
       
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+      
+      - name: Update image tag in kustomization
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          cd config/manager
+          kustomize edit set image controller=ghcr.io/${{ github.repository }}:${VERSION}
+          cat kustomization.yaml
+      
+      - name: Commit updated kustomization to main branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Fetch main branch
+          git fetch origin main
+          
+          # Check out main branch
+          git checkout main
+          
+          # Apply the kustomization change to main
+          cd config/manager
+          kustomize edit set image controller=ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+          cd ../..
+          
+          # Commit if there are changes
+          if git diff --quiet config/manager/kustomization.yaml; then
+            echo "No changes to commit"
+          else
+            git add config/manager/kustomization.yaml
+            git commit -m "chore: update image tag to ${{ steps.version.outputs.version }} [skip ci]"
+            git push origin main
+          fi
+          
+          # Switch back to the tag for release creation
+          git checkout ${{ steps.version.outputs.version }}
+      
       - name: Extract changelog for this version
         id: changelog
         run: |

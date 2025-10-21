@@ -1,2 +1,8 @@
 resources:
 - manager.yaml
+
+# Replace controller:latest with actual image
+images:
+- name: controller
+  newName: ghcr.io/rajinator/installplan-approver-operator
+  newTag: v0.1.1
