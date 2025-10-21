@@ -90,14 +90,28 @@ ghcr.io/rajinator/installplan-approver-operator:v0.1.0  # Specific version
 
 ### Quick Install
 
-**Using kustomize:**
+**Using kustomize (latest stable):**
 ```bash
-kubectl apply -k github.com/rajinator/installplan-approver-operator/config/default?ref=v1.0.0
+kubectl apply -k 'github.com/rajinator/installplan-approver-operator/config/default?ref=v0.1.0'
+
+# For OpenShift (quote to avoid zsh glob issues)
+oc apply -k 'github.com/rajinator/installplan-approver-operator/config/default?ref=v0.1.0'
 ```
 
-**Using operator image directly:**
+**Using specific image version:**
 ```bash
-make deploy IMG=ghcr.io/rajinator/installplan-approver-operator:v1.0.0
+# Clone the repo first
+git clone https://github.com/rajinator/installplan-approver-operator
+cd installplan-approver-operator
+
+# Deploy with specific image
+make deploy IMG=ghcr.io/rajinator/installplan-approver-operator:v0.1.0
+```
+
+**Using latest development build:**
+```bash
+kubectl apply -k github.com/rajinator/installplan-approver-operator/config/default
+# Note: Uses :latest tag (amd64 only for development builds)
 ```
 
 **Verify installation:**

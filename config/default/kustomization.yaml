@@ -33,6 +33,12 @@ resources:
 # be able to communicate with the Webhook Server.
 #- ../network-policy
 
+# Replace the placeholder image with the actual GHCR image
+images:
+- name: controller
+  newName: ghcr.io/rajinator/installplan-approver-operator
+  newTag: latest
+
 # Uncomment the patches line if you enable Metrics
 patches:
 # [METRICS] The following patch will enable the metrics endpoint using HTTPS and the port :8443.
