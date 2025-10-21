@@ -272,8 +272,8 @@ The operator minimizes API load through:
 ### Scalability
 
 Tested with:
-- ✅ 100+ operators across multiple namespaces
-- ✅ InstallPlan approval within milliseconds
+- ✅ Multiple operators across multiple namespaces
+- ✅ InstallPlan approval within seconds if not milliseconds
 - ✅ Minimal CPU/memory footprint
 
 ### Resource Usage
