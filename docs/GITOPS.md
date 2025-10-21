@@ -454,7 +454,7 @@ status:
 
 ```bash
 # Follow operator logs
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager -f
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager -f
 ```
 
 ## Troubleshooting GitOps Issues
@@ -476,7 +476,7 @@ kubectl get subscription cert-manager -n cert-manager -o yaml
 kubectl get installplans -n cert-manager
 
 # Check operator logs
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager --tail=50
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager --tail=50
 ```
 
 ### Sync Fails

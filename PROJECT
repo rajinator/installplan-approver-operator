@@ -9,7 +9,7 @@ plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: installplan-approver-operator
-repo: github.com/bapu-cloud/installplanapprover-operator
+repo: github.com/rajinator/installplan-approver-operator
 resources:
 - api:
     crdVersion: v1
@@ -18,6 +18,6 @@ resources:
   domain: bapu.cloud
   group: operators
   kind: InstallPlanApprover
-  path: github.com/bapu-cloud/installplanapprover-operator/api/v1alpha1
+  path: github.com/rajinator/installplan-approver-operator/api/v1alpha1
   version: v1alpha1
 version: "3"

@@ -126,7 +126,7 @@ kubectl get pods -n iplan-approver-system
 ### Check Logs
 
 ```bash
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager -f
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager -f
 ```
 
 **Healthy logs should show:**

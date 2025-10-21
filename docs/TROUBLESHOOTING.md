@@ -70,7 +70,7 @@ kubectl get installplan <name> -n <namespace> -o jsonpath='{.spec.clusterService
 ### Check 5: Operator Logs
 
 ```bash
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager --tail=100
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager --tail=100
 ```
 
 **Look for:**
@@ -316,7 +316,7 @@ Add custom health checks to ArgoCD. See [docs/GITOPS.md](GITOPS.md) for details.
 
 **Check operator logs for frequent reconciliations:**
 ```bash
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager | grep "Reconciling"
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager | grep "Reconciling"
 ```
 
 **Solution:**
@@ -371,7 +371,7 @@ kubectl get events -n <target-namespace> --field-selector involvedObject.kind=In
 
 ```bash
 # Follow operator logs while creating approver
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager -f
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager -f
 
 # In another terminal, create approver
 kubectl apply -f my-approver.yaml

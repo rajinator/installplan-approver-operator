@@ -70,7 +70,7 @@ oc apply -k 'github.com/rajinator/installplan-approver-operator/config/default?r
 **Verify:**
 ```bash
 kubectl get deployment -n iplan-approver-system
-kubectl logs -n iplan-approver-system -l control-plane=controller-manager -f
+kubectl logs -n iplan-approver-system -l control-plane=ipao-controller-manager -f
 ```
 
 ### Container Images
