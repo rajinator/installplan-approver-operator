@@ -88,8 +88,8 @@ jobs:
             type=edge,branch=master
             # For PRs: pr-123
             type=ref,event=pr
-            # Always include short SHA
-            type=sha,prefix={{branch}}-
+            # SHA for non-release builds only (branch name + SHA)
+            type=sha,prefix={{branch}}-,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
       
       - name: Build and push
         id: build
