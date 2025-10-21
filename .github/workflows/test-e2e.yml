@@ -2,6 +2,14 @@ name: E2E Tests
 
 # Runs end-to-end tests on Kind cluster
 # Skips when only documentation files are changed to save CI/CD minutes
+#
+# Test Strategy:
+# - Builds operator image locally using git SHA as tag
+# - Loads image into Kind cluster (no registry dependency)
+# - Updates kustomization.yaml to use locally built image
+# - Runs E2E tests with the local image
+# This avoids chicken-and-egg problem where kustomization references
+# a version tag that doesn't exist in the registry yet.
 
 on:
   push:
@@ -43,6 +51,35 @@ jobs:
 
       - name: Verify kind installation
         run: kind version
+
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+          kustomize version
+
+      - name: Build operator image
+        run: |
+          # Extract version from kustomization or use git SHA
+          VERSION="${GITHUB_SHA::8}"
+          IMG="ghcr.io/${{ github.repository }}:${VERSION}"
+          echo "Building image: ${IMG}"
+          make docker-build IMG="${IMG}"
+
+      - name: Load image into Kind
+        run: |
+          VERSION="${GITHUB_SHA::8}"
+          IMG="ghcr.io/${{ github.repository }}:${VERSION}"
+          kind load docker-image "${IMG}" --name kind
+
+      - name: Update kustomization to use local image
+        run: |
+          VERSION="${GITHUB_SHA::8}"
+          IMG="ghcr.io/${{ github.repository }}:${VERSION}"
+          cd config/manager
+          # Override the image tag with our locally built version
+          kustomize edit set image controller="${IMG}"
+          cat kustomization.yaml
 
       - name: Running Test e2e
         run: |
