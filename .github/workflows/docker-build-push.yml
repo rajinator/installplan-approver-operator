@@ -3,6 +3,8 @@ name: Build and Push Container Image
 # Build strategy:
 # - Pull requests & main branch pushes: Build AMD64 only (fast, ~5 min)
 # - Release tags (v*): Build multi-arch AMD64 + ARM64 (slow, ~15-20 min)
+# - Documentation-only changes: Skipped (saves CI/CD minutes)
+# - Tags always trigger builds (releases need images regardless of what changed)
 # This saves GitHub Actions minutes while ensuring releases support all architectures.
 
 on:
@@ -11,9 +13,23 @@ on:
       - main
     tags:
       - 'v*'
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'QUICKSTART.md'
+      - 'LICENSE'
+      - '.gitignore'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'QUICKSTART.md'
+      - 'LICENSE'
+      - '.gitignore'
 
 env:
   REGISTRY: ghcr.io

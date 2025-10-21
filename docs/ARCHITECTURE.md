@@ -279,8 +279,8 @@ Tested with:
 ### Resource Usage
 
 **Typical resource consumption:**
-- CPU: 10-50m (idle) / 100-200m (active)
-- Memory: 50-100Mi
+- CPU: 1-50m (idle) / 100-200m (active)
+- Memory: 25m (idle) - 100Mi
 
 ## Error Handling
 

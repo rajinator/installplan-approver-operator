@@ -8,15 +8,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Go module renamed to match repository naming convention (`installplan-approver-operator`)
-- CRD shortname `ipa` for easier CLI usage (`kubectl get ipa`)
-- Comprehensive deployment guide (DEPLOY.md)
-- Quick deployment via Kustomize from GitHub
-- Performance documentation explaining intelligent requeue strategy
 
 ### Changed
-- E2E test constants updated to reflect shortened resource names (63-char limit fix)
-- All import paths updated to new module name
+
+### Fixed
+
+### Removed
+
+---
+
+## [0.1.0] - 2025-10-20
+
+### Added
+- Initial public release
+- Event-driven operator using Kubernetes informers and listers
+- Version-matched InstallPlan approval based on Subscription's `startingCSV`
+- Intelligent requeue strategy to minimize API load
+- Multi-namespace targeting support
+- Operator name filtering support
+- Go module named `installplan-approver-operator`
+- CRD shortname `ipa` for easier CLI usage (`kubectl get ipa`)
+- Comprehensive documentation in `docs/` directory:
+  - `docs/ARCHITECTURE.md` - How the operator works, reconciliation logic
+  - `docs/INSTALLATION.md` - Multiple installation methods
+  - `docs/CONFIGURATION.md` - Configuration examples and patterns
+  - `docs/GITOPS.md` - ArgoCD integration with custom health checks
+  - `docs/DEVELOPMENT.md` - Development and contributing guide
+  - `docs/TROUBLESHOOTING.md` - Common issues and solutions
+- Quick deployment via Kustomize from GitHub
+- QUICKSTART.md for quick local testing with test-operator.sh script
+- E2E test suite with GitHub Actions
+- Multi-architecture container images (amd64, arm64) on GHCR
+- Red Hat UBI-based container images
+
+### Changed
+- README.md slimmed down from 404 to 223 lines (45% reduction)
+- Documentation restructured: moved detailed content from README to dedicated docs
+- Resource names shortened to comply with Kubernetes 63-character DNS label limit
+  - Namespace: `installplan-approver-operator-system` → `iplan-approver-system`
+  - Resource prefix: `installplan-approver-operator-` → `iplan-approver-`
+
+### Fixed
+- E2E test constants updated to reflect shortened resource names
+- Reconciliation strategy: event-driven with intelligent requeue (not fixed 30s polling)
 
 ---
 
@@ -267,18 +301,6 @@ When making changes, please:
 3. **Add tests**: E2E or unit tests for new features
 4. **Update README**: If user-facing changes
 5. **Use conventional commits**: `feat:`, `fix:`, `docs:`, etc.
-
----
-
-## Version History
-
-### v0.1.0 (Unreleased)
-- Initial public release
-- Version-matched approval based on startingCSV
-- Intelligent requeue strategy
-- E2E test suite
-- Comprehensive documentation
-- CRD shortname support
 
 ---
 

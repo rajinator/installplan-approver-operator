@@ -1,9 +1,26 @@
 name: E2E Tests
 
+# Runs end-to-end tests on Kind cluster
+# Skips when only documentation files are changed to save CI/CD minutes
+
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'QUICKSTART.md'
+      - 'LICENSE'
+      - '.gitignore'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'QUICKSTART.md'
+      - 'LICENSE'
+      - '.gitignore'
 
 jobs:
   test-e2e:
