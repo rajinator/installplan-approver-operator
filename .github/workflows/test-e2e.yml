@@ -2,14 +2,6 @@ name: E2E Tests
 
 # Runs end-to-end tests on Kind cluster
 # Skips when only documentation files are changed to save CI/CD minutes
-#
-# Test Strategy:
-# - Builds operator image locally using git SHA as tag
-# - Loads image into Kind cluster (no registry dependency)
-# - Updates kustomization.yaml to use locally built image
-# - Runs E2E tests with the local image
-# This avoids chicken-and-egg problem where kustomization references
-# a version tag that doesn't exist in the registry yet.
 
 on:
   push:
@@ -58,6 +50,12 @@ jobs:
           sudo mv kustomize /usr/local/bin/
           kustomize version
 
+      - name: Create Kind cluster
+        run: |
+          kind create cluster --name kind --wait 5m
+          kubectl cluster-info
+          kubectl get nodes
+
       - name: Build operator image
         run: |
           # Extract version from kustomization or use git SHA
@@ -66,11 +64,13 @@ jobs:
           echo "Building image: ${IMG}"
           make docker-build IMG="${IMG}"
 
-      - name: Load image into Kind
+      - name: Load image into Kind cluster
         run: |
           VERSION="${GITHUB_SHA::8}"
           IMG="ghcr.io/${{ github.repository }}:${VERSION}"
+          echo "Loading image ${IMG} into Kind cluster..."
           kind load docker-image "${IMG}" --name kind
+          echo "Image loaded successfully"
 
       - name: Update kustomization to use local image
         run: |
@@ -84,4 +84,5 @@ jobs:
       - name: Running Test e2e
         run: |
           go mod tidy
-          make test-e2e
+          # Use KIND_CLUSTER=kind to match the cluster we created
+          KIND_CLUSTER=kind make test-e2e
